@@ -1,7 +1,6 @@
 class QuotesController < Rulers::Controller
-
   def a_quote
-    "Hello! Welcome to " + "\n<pre>\n#{env}</pre>" + "\n<pre>\n#{env["PATH_INFO"]}</pre>"
+    render :a_quote, author: "Stan"
   end
 
   def exceptions

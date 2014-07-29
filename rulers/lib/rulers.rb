@@ -2,6 +2,7 @@ require "rulers/version"
 require "rulers/routing"
 require "rulers/util.rb"
 require "rulers/dependencies"
+require "rulers/controller"
 
 module Rulers
   class Application
@@ -15,16 +16,6 @@ module Rulers
       controller = klass.new(env) # 把klass變成一個controller
       text = controller.send(act) # controller執行send的動作把我們在controller中定義的action產生的內容傳送出去
       [200, {"Content-Type" => "text/html"},[text]]
-    end
-  end
-
-  class Controller
-    def initialize(env)
-      @env = env
-    end
-
-    def env
-      @env
     end
   end
 end
