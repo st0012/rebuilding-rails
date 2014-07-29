@@ -1,7 +1,9 @@
 require "erubis"
+require "rulers/file_model"
 
 module Rulers
   class Controller
+    include Rulers::Model
     def initialize(env)
       @env = env
     end
@@ -17,12 +19,12 @@ module Rulers
       template = File.read(filename)
       eruby = Erubis::Eruby.new(template)
       eruby.evaluate(locals.merge(env: env))
+      # puts locals
     end
 
     def controller_name
       klass = self.class
       klass = klass.to_s.gsub(/Controller$/,"")
-      puts self.class.to_s.gsub(/Controller$/,"")
       Rulers.to_underscore(klass)
     end
   end

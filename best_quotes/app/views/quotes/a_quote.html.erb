@@ -1,6 +1,12 @@
 <p>
-  Author: <%= @author %>
+  Submitter: <%= @obj["submitter"] %>
 </p>
 <p>
-  Ruler version <%= Rulers::VERSION %>
+  Quote: <%= @obj["quote"] %>
+</p>
+<p>
+  Attribution: <%= @obj["attribution"] %>
+</p>
+<p>
+  Sentence: <blockquote><%= @sentence %></blockquote> 
 </p>
