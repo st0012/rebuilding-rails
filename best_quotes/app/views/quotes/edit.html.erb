@@ -1,0 +1,9 @@
+<body>
+  <form action="update" method="post">
+    <input type="text" name="id" value="<%= @quote["id"] %>" style="display:none;">
+    <input type="text" name="submitter" value="<%= @quote["submitter"] %>" placeholder="Submitter"><br> 
+    <input type="text" name="quote" value="<%= @quote["quote"] %>" placeholder="Quote"><br>
+    <input type="text" name="attribution" value="<%= @quote["attribution"] %>" placeholder="Arrtibution"><br>
+    <input type="submit" value="Submit">
+  </form>
+</body>

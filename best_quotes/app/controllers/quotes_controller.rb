@@ -1,14 +1,43 @@
 class QuotesController < Rulers::Controller
-  def a_quote
-    render :a_quote, author: "Stan"
+
+  def index
+    @quotes = FileModel.all
+    render_response :index
   end
 
-  def quote_1
-    @quote_1 = Rulers::Model::FileModel.find(1)
-    render :a_quote, obj: @quote_1, sentence: @quote_1.print_sentence 
+  def show
+    @quote = FileModel.find(params["id"])
+    render_response :show
   end
 
-  def exceptions
-    raise "It's a bad one!" 
+  def new
+    render_response :new
+  end
+
+  def create
+    params = decode(env['rack.input'].gets)
+    @quote = FileModel.create(params)
+    render_response :show
+  end
+
+  def edit
+    @quote = FileModel.find(params["id"])
+    render_response :edit
+  end
+
+  def update
+    params = decode(env['rack.input'].gets)
+    @quote = FileModel.find(params["id"])
+    @quote.update(params)
+    @quote.save
+    render_response :show
+  end
+
+  def destroy
+    params = decode(env['rack.input'].gets)
+    @quote = FileModel.find(params["id"])
+    @quote.destroy
+    @quotes = FileModel.all
+    render_response :index
   end
 end
