@@ -27,7 +27,6 @@ module Rulers
     end
 
     def response(text, status = 200, headers = {})
-      raise "Already Respond!!" if @response
       a = [text].flatten
       @response = Rack::Response.new(a, status, headers)
     end
@@ -40,9 +39,18 @@ module Rulers
       response(render(*args))
     end
 
+    def redirect_to(action = "", item = {}, status = 301, text = "123")
+      if action == :show
+        action = "show?id=#{item['id']}"
+      end
+      url = "http://#{@env['REMOTE_HOST']}:#{@env['SERVER_PORT']}/#{controller_name}/#{action}"
+      headers = {"statustext" => "HTTP/1.1 301 Moved Permanently", "location" => url}
+      @response = Rack::Response.new(text, status, headers)
+    end
+
     def render(view_name, locals = {})
       ivars = {}
-      
+
       self.instance_variables.each do |i|
         ivars[i[1..-1]] = self.instance_variable_get(i)
       end

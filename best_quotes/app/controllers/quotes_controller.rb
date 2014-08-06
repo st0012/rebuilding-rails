@@ -17,7 +17,7 @@ class QuotesController < Rulers::Controller
   def create
     params = decode(env['rack.input'].gets)
     @quote = FileModel.create(params)
-    render_response :show
+    redirect_to :show, @quote
   end
 
   def edit
@@ -30,14 +30,13 @@ class QuotesController < Rulers::Controller
     @quote = FileModel.find(params["id"])
     @quote.update(params)
     @quote.save
-    render_response :show
+    redirect_to :show, @quote
   end
 
   def destroy
     params = decode(env['rack.input'].gets)
     @quote = FileModel.find(params["id"])
     @quote.destroy
-    @quotes = FileModel.all
-    render_response :index
+    redirect_to :index
   end
 end
