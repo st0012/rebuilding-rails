@@ -1,5 +1,4 @@
 class QuotesController < Rulers::Controller
-  puts $LOAD_PATH
   def index
     @quotes = Quote.all
     render_response :index

@@ -83,7 +83,6 @@ SQL
         end.join(",")
 
         puts @hash.to_s, fields
-
         DB.execute <<SQL
 UPDATE #{self.class.table}
 SET #{fields}
@@ -121,14 +120,16 @@ SQL
         DB.table_info(table) do |row|
           @schema[row["name"]] = row["type"]
         end
-
-        @schema.keys.each do |method|
-          define_method(method){
-            self["#{method}"]
-          }
-        end
-
+        # @schema.keys.each do |method|
+        #   define_method(method){
+        #     self["#{method}"]
+        #   }
+        # end
         @schema
+      end
+
+      def method_missing(sym, *args, &block)
+        self["#{sym}"]
       end
 
       def print_sentence
