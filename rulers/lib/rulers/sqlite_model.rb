@@ -4,7 +4,6 @@ DB = SQLite3::Database.new "test.db"
 module Rulers
   module Model
     class SQLite
-
       def initialize(data = nil)
         @hash = data
       end
@@ -121,6 +120,12 @@ SQL
 
         DB.table_info(table) do |row|
           @schema[row["name"]] = row["type"]
+        end
+
+        @schema.keys.each do |method|
+          define_method(method){
+            self["#{method}"]
+          }
         end
 
         @schema

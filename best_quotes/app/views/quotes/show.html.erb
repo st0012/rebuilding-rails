@@ -1,21 +1,21 @@
 <% if @quote != nil %>
   <p>
-    Submitter: <%= @quote["submitter"] %>
+    Submitter: <%= @quote.submitter %>
   </p>
   <p>
-    Quote: <%= @quote["quote"] %>
+    Quote: <%= @quote.quote %>
   </p>
   <p>
-    Attribution: <%= @quote["attribution"] %>
+    Attribution: <%= @quote.attribution %>
   </p>
   <p>
     Sentence: <blockquote><%= @quote.print_sentence %></blockquote> 
   </p>
   <form action="destroy" method="post">
-    <input type="text" name="id" value="<%= @quote["id"] %>" style="display:none;">
+    <input type="text" name="id" value="<%= @quote.id %>" style="display:none;">
     <input type="submit" value="Delete">
   </form>
-  <a href="edit?id=<%=@quote['id']%>">Edit</a>
+  <a href="edit?id=<%=@quote.id%>">Edit</a>
 <% else %>
   <h1>This quote is empty!</h1>
 <% end %>
