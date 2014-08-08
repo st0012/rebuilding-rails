@@ -1,12 +1,12 @@
 class QuotesController < Rulers::Controller
-
+  puts $LOAD_PATH
   def index
-    @quotes = FileModel.all
+    @quotes = Quote.all
     render_response :index
   end
 
   def show
-    @quote = FileModel.find(params["id"])
+    @quote = Quote.find(params["id"])
     render_response :show
   end
 
@@ -16,18 +16,18 @@ class QuotesController < Rulers::Controller
 
   def create
     params = decode(env['rack.input'].gets)
-    @quote = FileModel.create(params)
+    @quote = Quote.create(params)
     redirect_to :show, @quote
   end
 
   def edit
-    @quote = FileModel.find(params["id"])
+    @quote = Quote.find(params["id"])
     render_response :edit
   end
 
   def update
     params = decode(env['rack.input'].gets)
-    @quote = FileModel.find(params["id"])
+    @quote = Quote.find(params["id"])
     @quote.update(params)
     @quote.save
     redirect_to :show, @quote
@@ -35,8 +35,16 @@ class QuotesController < Rulers::Controller
 
   def destroy
     params = decode(env['rack.input'].gets)
-    @quote = FileModel.find(params["id"])
+    @quote = Quote.find(params["id"])
     @quote.destroy
     redirect_to :index
+  end
+end
+
+class Quote < Rulers::Model::SQLite
+  self.schema.keys.each do |method|
+    define_method(method){
+      self["#{method}"]
+    }
   end
 end
