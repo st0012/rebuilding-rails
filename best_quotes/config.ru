@@ -1,34 +1,15 @@
 require "./config/application.rb"
-require "rack/commonlogger"
-# require "rackamole"
+app = BestQuotes::Application.new
 
-class BenchMarker
-  def initialize(app, runs = 100)
-    @app, @runs = app, runs
-  end
+use Rack::ContentType
 
-  def call(env)
-    t = Time.now
+app.route do
+  match "", "quotes#index"
+  match "sub-app", proc { [200, {}, ["Hello, sub-app!"]] }
 
-    result = nil
-    @runs.times { result = @app.call(env) }
-
-    t2 = Time.now - t
-    STDERR.puts <<OUTPUT
-Benchmark:
-  #{@runs} runs
-  #{t2.to_f} seconds total
-  #{t2.to_f * 1000.0 / @runs} millisec/run
-OUTPUT
-    
-    result
-  end
+  match ":controller/:id/:action"
+  match ":controller/:id", :default => { "action" => "show" }
+  match ":controller", :default => { "action" => "index" }
 end
 
-use BenchMarker, 1
-# use Rack::ContentLength
-use Rack::ContentType
-use Rack::Runtime
-
-run BestQuotes::Application.new
-
+run app
