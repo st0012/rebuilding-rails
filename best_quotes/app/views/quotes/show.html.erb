@@ -11,11 +11,11 @@
   <p>
     Sentence: <blockquote><%= @quote.print_sentence %></blockquote> 
   </p>
-  <form action="destroy" method="post">
+  <form action="<%= @quote.id %>/destroy" method="post">
     <input type="text" name="id" value="<%= @quote.id %>" style="display:none;">
     <input type="submit" value="Delete">
   </form>
-  <a href="edit?id=<%=@quote.id%>">Edit</a>
+  <a href="<%=@quote.id%>/edit">Edit</a>
 <% else %>
   <h1>This quote is empty!</h1>
 <% end %>

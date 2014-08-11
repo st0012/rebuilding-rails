@@ -3,6 +3,24 @@ class RouteObject
     @rules = []
   end
 
+  def resources(resource)
+    index  =  { :method => "GET", :regexp => /^\/(#{resource})\/$/, :vars => ["controller"], :options=>{:default=>{"action" => "index"}} }
+    show   =  { :method => "GET", :regexp => /^\/(#{resource})\/([0-9]+)$/, :vars => ["controller", "id"], :options=>{:default=>{"action" => "show"}} }
+    new    =  { :method => "GET", :regexp => /^\/(#{resource})\/([a-z]+)$/, :vars => ["controller", "action"], :options=>{:default=>{}} }
+    edit   =  { :method => "GET", :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options=>{:default=>{}} }
+    create =  { :method => "POST", :regexp => /^\/(#{resource})\/([a-z]+)$/, :vars => ["controller", "action"], :options=>{:default=>{}} }
+    update =  { :method => "POST", :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options=>{:default=>{}} }
+    delete =  { :method => "POST", :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options=>{:default=>{}} }
+    
+    @rules << new
+    @rules << show
+    @rules << index
+    @rules << edit
+    @rules << create
+    @rules << update
+    @rules << delete
+  end
+
   def match(url, *args)
     options = {}
     options = args.pop if args[-1].is_a?(Hash) #如果最後一個argument為hash則取出他為option 
@@ -10,6 +28,7 @@ class RouteObject
 
     dest = nil
     dest = args.pop if args.size > 0
+
     raise "Too many args!!" if args.size > 0
 
     parts = url.split("/")
@@ -29,41 +48,41 @@ class RouteObject
     end
 
     regexp = regexp_parts.join("/")
-    puts regexp
-    puts dest
-    puts vars
-    puts options
     @rules.push({
       :regexp => Regexp.new("^/#{regexp}$"),
       :vars => vars,
       :dest => dest,
       :options => options,
+      :method => "GET"
     })
   end
 
-  def check_url(url)
+  def check_url(url, method)
     @rules.each do |r|
-      m = r[:regexp].match(url)
+      if r[:method] == method
+        m = r[:regexp].match(url)
+        puts "#{m} ++++ #{r}"
+        if m
+          options = r[:options]
+          params = options[:default].dup
 
-      if m
-        options = r[:options]
-        params = options[:default].dup
+          r[:vars].each_with_index do |v, i|
+            puts "#{v} == #{m.captures[i]}"
+            params[v] = m.captures[i]
+          end
 
-        r[:vars].each_with_index do |v, i|
-          params[v] = m.captures[i]
-        end
-
-        dest = nil
-        if r[:dest]
-          return get_dest(r[:dest], params)
-        else
-          controller = params["controller"]
-          action = params["action"]
-          return get_dest("#{controller}" + "##{action}", params)
+          dest = nil
+          if r[:dest]
+            return get_dest(r[:dest], params)
+          else
+            controller = params["controller"]
+            action = params["action"]
+            return get_dest("#{controller}" + "##{action}", params)
+          end
         end
       end
     end
-    nil
+    raise "No match!"
   end
 
   def get_dest(dest, routing_params = {})
@@ -86,7 +105,7 @@ module Rulers
 
     def get_rack_app(env)
       raise "No routes!" unless @route_obj
-      @route_obj.check_url(env["PATH_INFO"])
+      @route_obj.check_url(env["PATH_INFO"], env["REQUEST_METHOD"])   
     end
 
     def get_controller_and_action(env)
