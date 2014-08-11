@@ -4,21 +4,15 @@ class RouteObject
   end
 
   def resources(resource)
-    index  =  { :method => "GET", :regexp => /^\/(#{resource})\/$/, :vars => ["controller"], :options=>{:default=>{"action" => "index"}} }
-    show   =  { :method => "GET", :regexp => /^\/(#{resource})\/([0-9]+)$/, :vars => ["controller", "id"], :options=>{:default=>{"action" => "show"}} }
-    new    =  { :method => "GET", :regexp => /^\/(#{resource})\/([a-z]+)$/, :vars => ["controller", "action"], :options=>{:default=>{}} }
-    edit   =  { :method => "GET", :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options=>{:default=>{}} }
-    create =  { :method => "POST", :regexp => /^\/(#{resource})\/([a-z]+)$/, :vars => ["controller", "action"], :options=>{:default=>{}} }
-    update =  { :method => "POST", :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options=>{:default=>{}} }
-    delete =  { :method => "POST", :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options=>{:default=>{}} }
+    index  =  { :method => "GET",  :regexp => /^\/(#{resource})\/$/, :vars => ["controller"], :options => { :default => { "action" => "index" }}}
+    show   =  { :method => "GET",  :regexp => /^\/(#{resource})\/([0-9]+)$/, :vars => ["controller", "id"], :options => {:default=>{ "action" => "show" }}}
+    new    =  { :method => "GET",  :regexp => /^\/(#{resource})\/([a-z]+)$/, :vars => ["controller", "action"], :options => {:default=>{}}}
+    edit   =  { :method => "GET",  :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options => {:default=>{}}}
+    create =  { :method => "POST", :regexp => /^\/(#{resource})\/([a-z]+)$/, :vars => ["controller", "action"], :options => {:default=>{}}}
+    update =  { :method => "PUT", :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options => {:default=>{}}}
+    delete =  { :method => "DELETE", :regexp => /^\/(#{resource})\/([0-9]+)\/([a-z]+)$/, :vars => ["controller", "id", "action"], :options => {:default=>{}}}
     
-    @rules << new
-    @rules << show
-    @rules << index
-    @rules << edit
-    @rules << create
-    @rules << update
-    @rules << delete
+    @rules << new << show << index << edit << create << update << delete
   end
 
   def match(url, *args)
@@ -58,6 +52,7 @@ class RouteObject
   end
 
   def check_url(url, method)
+    puts "method is #{method}"
     @rules.each do |r|
       if r[:method] == method
         m = r[:regexp].match(url)

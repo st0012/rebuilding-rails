@@ -78,6 +78,9 @@ SQL
           return true
         end
 
+        unvalid = @hash.keys - self.class.schema.keys
+        unvalid.each { |key| @hash.delete(key) }
+        
         fields = @hash.map do |key, value|
           "#{key}=#{self.class.to_sql(value)}"
         end.join(",")

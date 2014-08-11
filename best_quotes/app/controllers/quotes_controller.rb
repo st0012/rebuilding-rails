@@ -5,20 +5,18 @@ class QuotesController < Rulers::Controller
   end
 
   def show
-    puts params
     @quote = Quote.find(params["id"])
     render_response :show
   end
 
   def new
-    puts "new"
     render_response :new
   end
 
   def create
     params = decode(request.body.read)
     @quote = Quote.create(params)
-    redirect_to :show, @quote.id
+    redirect_to :show, @quote
   end
 
   def edit
@@ -31,7 +29,7 @@ class QuotesController < Rulers::Controller
     @quote = Quote.find(params["id"])
     @quote.update(params)
     @quote.save
-    redirect_to :show, @quote.id
+    redirect_to :show, @quote
   end
 
   def destroy

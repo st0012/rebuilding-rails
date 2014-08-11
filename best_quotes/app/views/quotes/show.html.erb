@@ -12,6 +12,7 @@
     Sentence: <blockquote><%= @quote.print_sentence %></blockquote> 
   </p>
   <form action="<%= @quote.id %>/destroy" method="post">
+    <input type="text" name="_method" value="delete" style="display:none;" >
     <input type="text" name="id" value="<%= @quote.id %>" style="display:none;">
     <input type="submit" value="Delete">
   </form>

@@ -58,7 +58,8 @@ module Rulers
     end
 
     def redirect_to(action = "", item = nil, status = 301)
-      url = "http://#{@env['REMOTE_HOST']}:#{@env['SERVER_PORT']}/#{controller_name}/#{item}"
+      item.nil? ? id = "" : id = item.id
+      url = "http://#{@env['REMOTE_HOST']}:#{@env['SERVER_PORT']}/#{controller_name}/#{id}"
       headers = {"statustext" => "HTTP/1.1 301 Moved Permanently", "location" => url}
       @response = Rack::Response.new("", status, headers)
     end
