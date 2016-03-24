@@ -6,6 +6,7 @@ module BestQuotes
   end
 end
 
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..", "app", "models")
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..", "app", "controllers")
 
 # Filr.dirname(__FILE__) 取得當前文件路徑

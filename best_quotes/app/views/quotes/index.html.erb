@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <ul>
+  <% @quotes.each do |q| %>
+    <li>
+      <a href="<%= q.id %>"><%= q.quote if q != nil%></a>
+    </li>
+  <% end %>
+  </ul>
+</body>
+</html>
